@@ -1,0 +1,58 @@
+name: Test
+
+on:
+  pull_request:
+  push:
+    branches:
+      - '**'
+    tags-ignore:
+      - 'v*'
+
+jobs:
+  test:
+    # Skip running tests for local pull requests (use push event instead), run only for foreign ones
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.owner.login != github.event.pull_request.base.repo.owner.login
+    name: "Ruby ${{ matrix.ruby }} × Sidekiq v${{ matrix.sidekiq }} × ActiveJob v${{ matrix.activejob }} × Redis v${{ matrix.redis }}"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - ruby: "3.3"
+            sidekiq: '7'
+            activejob: '7.1'
+            redis: '7.2'
+          - ruby: "3.2"
+            sidekiq: '7'
+            activejob: '7.0'
+            redis: '7.2'
+          - ruby: "3.1"
+            sidekiq: '6'
+            activejob: '6.1'
+            redis: '7.0'
+          - ruby: "3.0"
+            sidekiq: '5'
+            activejob: '6.0'
+            redis: '6.2'
+    services:
+      redis:
+        image: redis:${{ matrix.redis }}
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+    env:
+      REDIS_URL: redis://localhost:6379
+      SIDEKIQ_VERSION: '${{ matrix.sidekiq }}'
+      ACTIVEJOB_VERSION: '${{ matrix.activejob }}'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+      - name: Run RSpec
+        run: bundle exec rspec
