@@ -6,20 +6,9 @@ This tiny [Sidekiq] middleware will re-route client's jobs after certain thresho
 
 “Weighted queues” feature of Sidekiq allows to de-prioritize jobs in throttled queues, so they will not block jobs from other clients, at the same time preserving overall throughput.
 
-<a href="https://evilmartians.com/?utm_source=sidekiq-fair_tenant">
-  <picture>
-    <source
-      media="(prefers-color-scheme: dark)"
-      srcset="https://evilmartians.com/badges/sponsored-by-evil-martians_v2.0_for-dark-bg@2x.png"
-    >
-    <img
-      src="https://evilmartians.com/badges/sponsored-by-evil-martians_v2.0@2x.png"
-      alt="Sponsored by Evil Martians"
-      width="236"
-      height="54"
-    >
-  </picture>
-</a>
+<br/>
+
+<img src="https://cdn.evilmartians.com/badges/logo-no-label.svg" alt="Evil Martians logo" width="22" height="16" /> <b>Sidekiq::FairTenant</b> is built by <b><a href="https://evilmartians.com/">Evil Martians</a></b>, an American design and engineering consultancy for <b>developer tools, AI, and cybersecurity startups</b>.
 
 ## Installation
 
